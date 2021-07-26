@@ -1,0 +1,27 @@
+{
+    "name": "Twitter Timeline Filter",
+    "description": "filter your timeline by groups of users",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": ["tabs", "scripting"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "/images/icons8-filter-16.png",
+        "24": "/images/icons8-filter-24.png",
+        "32": "/images/icons8-filter-32.png",
+        "48": "/images/icons8-filter-48.png",
+        "96": "/images/icons8-filter-96.png"
+      }
+    },
+    "icons": {
+        "16": "/images/icons8-filter-16.png",
+        "24": "/images/icons8-filter-24.png",
+        "32": "/images/icons8-filter-32.png",
+        "48": "/images/icons8-filter-48.png",
+        "96": "/images/icons8-filter-96.png"
+    }
+  }
+  
+  
+  
