@@ -3,7 +3,11 @@
     "description": "filter your timeline by groups of users",
     "version": "1.0",
     "manifest_version": 3,
-    "permissions": ["tabs", "scripting"],
+    "permissions": [
+      "tabs", 
+      "scripting",
+      "activeTab"
+    ],
     "action": {
       "default_popup": "popup.html",
       "default_icon": {
