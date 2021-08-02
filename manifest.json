@@ -6,8 +6,18 @@
     "permissions": [
       "tabs", 
       "scripting",
-      "activeTab"
+      "activeTab",
+      "storage"
     ],
+    "content_scripts": [
+      {
+        "matches": ["https://twitter.com/home"],
+        "js": ["jquery-2.2.0.min.js","filter.js" ]
+      }
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
     "action": {
       "default_popup": "popup.html",
       "default_icon": {
