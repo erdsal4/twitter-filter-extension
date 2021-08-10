@@ -1,21 +1,9 @@
-window.onload = setTimeout(function() {
-  chrome.storage.sync.get('users', function(result){
-  console.log(JSON.parse(JSON.stringify(result.users)))
-  if (typeof result.users[0].uname === 'string') {
-    console.log("stringmiş");
-    let uname = result.users[0].uname;
-    var tweets = document.querySelectorAll("article");
-    console.log(JSON.parse(JSON.stringify(tweets)));
-    // doesn't go into loop for now
-    for (tweet of tweets) {
-        let username = tweet.querySelector("a div.r-13hce6t span");
-        if (username.innerHTML !== uname) {
-            tweet.parentNode.parentNode.style.display = "none";
-        }
-    }
-}
-})
-}, 4000);
+var s = document.createElement('script');
+s.src = chrome.runtime.getURL('script.js');
+s.onload = function() {
+    this.remove();
+};
+(document.head || document.documentElement).appendChild(s);
     /*
     
     1- filter out any tweets except for one account

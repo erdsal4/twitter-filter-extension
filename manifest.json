@@ -13,9 +13,13 @@
       {
         "matches": ["https://twitter.com/home"],
         "js": ["jquery-2.2.0.min.js","filter.js" ],
-        "run_at": "document_end"
+        "run_at": "document_start"
       }
     ],
+    "web_accessible_resources": [{
+      "resources": ["script.js"],
+      "matches": ["<all_urls>"]
+    }],
     "background": {
       "service_worker": "background.js"
     },
