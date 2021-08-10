@@ -12,7 +12,8 @@
     "content_scripts": [
       {
         "matches": ["https://twitter.com/home"],
-        "js": ["jquery-2.2.0.min.js","filter.js" ]
+        "js": ["jquery-2.2.0.min.js","filter.js" ],
+        "run_at": "document_end"
       }
     ],
     "background": {

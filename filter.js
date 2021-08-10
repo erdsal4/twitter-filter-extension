@@ -1,22 +1,21 @@
-chrome.storage.sync.get('users', function(result){
-  console.log(result);
+window.onload = setTimeout(function() {
+  chrome.storage.sync.get('users', function(result){
+  console.log(JSON.parse(JSON.stringify(result.users)))
   if (typeof result.users[0].uname === 'string') {
     console.log("stringmiş");
     let uname = result.users[0].uname;
-    var tweets = document.getElementsByTagName("article");
-    
+    var tweets = document.querySelectorAll("article");
+    console.log(JSON.parse(JSON.stringify(tweets)));
     // doesn't go into loop for now
     for (tweet of tweets) {
         let username = tweet.querySelector("a div.r-13hce6t span");
-        console.log("tweet")
-        console.log(username);
         if (username.innerHTML !== uname) {
             tweet.parentNode.parentNode.style.display = "none";
         }
     }
 }
 })
-
+}, 4000);
     /*
     
     1- filter out any tweets except for one account

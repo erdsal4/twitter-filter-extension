@@ -14,6 +14,12 @@ filter.addEventListener("click", async () => {
     chrome.runtime.sendMessage({ "uname": uname })
     
   });
+
+filter.addEventListener("clean", async () => {
+    
+    chrome.storage.sync.set({users: []})
+    
+}); 
   
   // The body of this function will be executed as a content script inside the
   // current page

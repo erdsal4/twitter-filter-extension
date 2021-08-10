@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener(addUser);
 
 function addUser(uname){
 
-    chrome.storage.local.get({users: []}, function (result) {
+    chrome.storage.sync.get({users: []}, async (result) => {
         // the input argument is ALWAYS an object containing the queried keys
         // so we select the key we need
         var users = result.users;
@@ -13,7 +13,7 @@ function addUser(uname){
             // you can use strings instead of objects
             // if you don't  want to define default values
             chrome.storage.sync.get('users', function (result) {
-                console.log(result.users)
+
             });
         });
     });
