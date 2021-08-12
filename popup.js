@@ -11,13 +11,13 @@ filter.addEventListener("click", async () => {
     
     var uname = document.getElementById('uname').value;
     console.log("popup");
-    chrome.runtime.sendMessage({ "uname": uname })
+    chrome.runtime.sendMessage({"action": "add", "uname": uname });
     
   });
 
-filter.addEventListener("clean", async () => {
+clean.addEventListener("click", async () => {
     
-    chrome.storage.sync.set({users: []})
+  chrome.runtime.sendMessage({"action": "clean"});
     
 }); 
   

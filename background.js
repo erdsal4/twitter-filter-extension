@@ -1,5 +1,19 @@
 
-chrome.runtime.onMessage.addListener(addUser);
+// don't quite understand how this works.. twitter probably uses pushState method when
+// uploading the page for first time, so this captures that event.
+
+chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
+    chrome.tabs.executeScript(null,{file:"filter.js"});
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.action === "add"){
+        addUser(request.uname);
+    } else if(request.action === "clean"){
+        cleanUsers();
+    }
+  }
+);
 
 function addUser(uname){
 
@@ -17,4 +31,9 @@ function addUser(uname){
             });
         });
     });
+}
+
+function cleanUsers(){
+    
+    chrome.storage.sync.set({users: []});
 }

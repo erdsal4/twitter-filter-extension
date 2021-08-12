@@ -1,9 +1,16 @@
-var s = document.createElement('script');
-s.src = chrome.runtime.getURL('script.js');
-s.onload = function() {
-    this.remove();
-};
-(document.head || document.documentElement).appendChild(s);
+chrome.storage.sync.get('users', function (result) {
+  console.log("injected");
+  var s = document.createElement('script');
+  console.log(result)
+  s.setAttribute("data", JSON.stringify(result.users));
+  s.src = chrome.runtime.getURL('script.js');
+  s.onload = function() {
+      this.remove();
+  };
+  (document.head || document.documentElement).appendChild(s);
+}
+);
+
     /*
     
     1- filter out any tweets except for one account

@@ -4,15 +4,19 @@
     "version": "1.0",
     "manifest_version": 3,
     "permissions": [
+      "webNavigation",
       "tabs", 
       "scripting",
       "activeTab",
       "storage"
     ],
+    "host_permissions": [
+      "*://twitter.com/*"
+    ],
     "content_scripts": [
       {
-        "matches": ["https://twitter.com/home"],
-        "js": ["jquery-2.2.0.min.js","filter.js" ],
+        "matches": ["*://twitter.com/*"],
+        "js": ["filter.js" ],
         "run_at": "document_start"
       }
     ],

@@ -1,10 +1,13 @@
+let data = document.currentScript.getAttribute('data'); //1
+console.log(data)
+var users = JSON.parse(data);
 var _open = XMLHttpRequest.prototype.open;
 window.XMLHttpRequest.prototype.open = function (method, URL) {
     var _onreadystatechange = this.onreadystatechange,
         _this = this;
 
     _this.onreadystatechange = function () {
-        // catch only completed 'api/search/universal' requests
+        // catch only completed 'api/2/timeline' requests
         if (_this.readyState === 4 && _this.status === 200 && ~URL.indexOf('/api/2/timeline')) {
             try {
                 //////////////////////////////////////
@@ -16,7 +19,7 @@ window.XMLHttpRequest.prototype.open = function (method, URL) {
                 let tweets = parsed.globalObjects.tweets;
                 var filtered = new Set();
                 for (const [key, value] of Object.entries(tweets)) {
-                    if (value.user_id_str != "173315794") {
+                    if (value.user_id_str != users[0]) {
                         filtered.add(key);
                         console.log(key);
                     }
