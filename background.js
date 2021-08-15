@@ -17,23 +17,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 function addUser(uname){
 
-    chrome.storage.sync.get({users: []}, async (result) => {
+    chrome.storage.sync.get('users', function (result) {
         // the input argument is ALWAYS an object containing the queried keys
         // so we select the key we need
-        var users = result.users;
-        users.push(uname);
+        console.log(result);
+        let save = result.users;
+        if(!save){
+            console.log("empty");
+            save = {};
+            save['unmatched'] = []
+            save['matched'] = { 'names': [], 'ids': []};
+        }
+        console.log(save);
+        save.unmatched.push(uname);
+        console.log(save);
         // set the new array value to the same key
-        chrome.storage.sync.set({users: users}, function () {
-            // you can use strings instead of objects
-            // if you don't  want to define default values
-            chrome.storage.sync.get('users', function (result) {
-
-            });
-        });
+        chrome.storage.sync.set({'users': save});
     });
 }
 
 function cleanUsers(){
     
-    chrome.storage.sync.set({users: []});
+    chrome.storage.sync.remove('users');
 }

@@ -1,6 +1,6 @@
-let data = document.currentScript.getAttribute('data'); //1
-console.log(data)
+let data = document.currentScript.getAttribute('data'); 
 var users = JSON.parse(data);
+
 var _open = XMLHttpRequest.prototype.open;
 window.XMLHttpRequest.prototype.open = function (method, URL) {
     var _onreadystatechange = this.onreadystatechange,
@@ -15,13 +15,30 @@ window.XMLHttpRequest.prototype.open = function (method, URL) {
                 //             EXAMPLE:             //
                 //////////////////////////////////////
                 var parsed = JSON.parse(_this.responseText);
+                
+                // check if there are any unmatched users
 
+                if(users.unmatched.length){
+                    var parsedUsers = parsed.globalObjects.users;
+                    for (const [key, value] of Object.entries(parsedUsers)){
+                        if(users.unmatched.includes(value.screen_name)){
+                            console.log(value.screen_name)
+                            users.matched.names.push(value.screen_name);
+                            users.matched.ids.push(value.id_str);
+                            const index = users.unmatched.indexOf(value.screen_name);
+                            if (index > -1) {
+                                users.unmatched.splice(index, 1);
+                            }
+                        }
+                    }
+                    // send new users object as a message to extension
+                }
+                let userIds = users.matched.ids;
                 let tweets = parsed.globalObjects.tweets;
                 var filtered = new Set();
                 for (const [key, value] of Object.entries(tweets)) {
-                    if (value.user_id_str != users[0]) {
+                    if (!userIds.includes(value.user_id_str)) {
                         filtered.add(key);
-                        console.log(key);
                     }
                 }
                 let entries = parsed.timeline.instructions[0].addEntries.entries;

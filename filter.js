@@ -29,6 +29,9 @@ chrome.storage.sync.get('users', function (result) {
 
     2- create an input for account name
 
+      - user inputs name, when added, add to unmatched users
+      - next page load, find user str from 
+
     3-  
     
     filter when twitter home page is opened, but contents not yet loaded
