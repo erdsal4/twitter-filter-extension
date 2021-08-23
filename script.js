@@ -32,12 +32,22 @@ window.XMLHttpRequest.prototype.open = function (method, URL) {
                         }
                     }
                     // send new users object as a message to extension
+                    console.log(users);
+                    if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
+                        chrome.runtime.sendMessage(
+                        "dcchomblnephblhkmbclkhdpknehldbn",
+                        {"users": users}
+                        );
+                    }
+                    
                 }
                 let userIds = users.matched.ids;
                 let tweets = parsed.globalObjects.tweets;
                 var filtered = new Set();
                 for (const [key, value] of Object.entries(tweets)) {
+                    console.log(value.user_id_str);
                     if (!userIds.includes(value.user_id_str)) {
+                        console.log(value.user_id_str);
                         filtered.add(key);
                     }
                 }
@@ -64,7 +74,7 @@ window.XMLHttpRequest.prototype.open = function (method, URL) {
                 /////////////// END //////////////////
             } catch (e) { }
 
-            console.log('Caught! :)', method, URL/*, _this.responseText*/);
+            console.log('Caught! :)', method, URL/*,_this.responseText*/);
         }
         // call original callback
         if (_onreadystatechange) _onreadystatechange.apply(this, arguments);

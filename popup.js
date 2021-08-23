@@ -7,7 +7,7 @@
 // 	})
 // });
 
-filter.addEventListener("click", async () => {
+add.addEventListener("click", async () => {
     
     var uname = document.getElementById('uname').value;
     console.log("popup");

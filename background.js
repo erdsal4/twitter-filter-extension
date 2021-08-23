@@ -15,6 +15,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 );
 
+chrome.runtime.onMessageExternal.addListener(
+    function(request, sender, sendResponse) {
+    //   if(!validate(request.sender)) // Check the URL with a custom function
+    //     return;
+      if(request.users){
+        chrome.storage.sync.set({'users': request.users}, function (result) {
+            console.log(result.users);
+        });
+      }
+    }
+  );
+
 function addUser(uname){
 
     chrome.storage.sync.get('users', function (result) {

@@ -1,4 +1,4 @@
-chrome.storage.sync.get('users', function (result) {
+chrome.storage.sync.get('users', async function (result) {
   console.log("injected");
   var s = document.createElement('script');
   console.log(result)
