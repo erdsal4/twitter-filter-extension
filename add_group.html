@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<body>
-
+<body style="width: 250px; height: 150px;">
     <form>
       <label for="gname">group name:</label><br>
-      <input type="text" id="gname" value="enter"> <br><br>
-    <div class="group-users">
-        
+      <input type="text" id="gname" placeholder="enter"> <br><br>
+    <div id="group-users">
+      <p>users</p>  
+      <input type="text" class = "usern" placeholder="enter username" style="margin: 5px;">
 
     </div>
-    <input type="submit" value="add new group">
+    <button type="button" id="newuser">new user</button>
+    <button type="button" id="save">save</button>
     </form>
-    <script src="popup.js"></script>
+    <script src="add_group.js"></script>
   </body>
 
 </html>

@@ -1,8 +1,11 @@
-chrome.storage.sync.get('users', async function (result) {
+chrome.storage.sync.get(['users', 'selected'], async function (result) {
   console.log("injected");
+  var display = {};
+  for(group of result.selected) {
+    display[groups] = result.users[group];
+  }
   var s = document.createElement('script');
-  console.log(result)
-  s.setAttribute("data", JSON.stringify(result.users));
+  s.setAttribute("data", JSON.stringify(display));
   s.src = chrome.runtime.getURL('script.js');
   s.onload = function() {
       this.remove();
@@ -45,6 +48,12 @@ chrome.storage.sync.get('users', async function (result) {
     3- create 2 and more inputs
 
     4- categorize accounts
+
+    - have categories in users now: users: {haber: {matched, unmatched} }
+    - need only to send the categories that are selected to script.js or
+    send all categories and only display the selected ones.
+
+    - input, have edit button that unlocks selection, 
 
     5- automatically draw accounts and dropdown menu 
 

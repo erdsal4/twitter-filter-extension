@@ -7,18 +7,48 @@
 // 	})
 // });
 
-add.addEventListener("click", async () => {
+window.onload = function () {
+
+  chrome.storage.sync.get('groups', function (result) {
+    console.log(result.groups);
+    for(gname of result.groups){
+      var group = document.createElement("input");
+      group.setAttribute("type","checkbox");
+      group.setAttribute("class", "a-group");
+      group.setAttribute("id", gname);
+      group.setAttribute("style", "margin: 5px;");
+      var label = document.createElement("label");
+      label.setAttribute("for", gname);
+      label.innerHTML = gname;
+      var groups = document.getElementById("group-list");
+      groups.appendChild(group);  
+      groups.appendChild(label);
+    }
+
+  })
+}
+
+edit.addEventListener("click", async () => {
     
-    var uname = document.getElementById('uname').value;
-    console.log("popup");
-    chrome.runtime.sendMessage({"action": "add", "uname": uname });
+    var groups = document.getElementsByClassName('a-group');
+    for (group of groups) {
+      group.disabled = false;
+    }
     
   });
 
-clean.addEventListener("click", async () => {
+save.addEventListener("click", async () => {
     
-  chrome.runtime.sendMessage({"action": "clean"});
-    
+  var groups = document.getElementsByClassName('a-group');
+  var selected = [];
+  for (group of groups) {
+    if(group.checked){
+      selected.push(group.value);
+    }
+    group.setAttribute("disabled", "true");
+  }
+  chrome.runtime.sendMessage({"action": "save-selection", "selected": selected});
+
 }); 
   
 newgroup.addEventListener("click", function () {
