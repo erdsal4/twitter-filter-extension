@@ -1,5 +1,6 @@
 let data = document.currentScript.getAttribute('data'); 
 var users = JSON.parse(data);
+console.log(users);
 
 var _open = XMLHttpRequest.prototype.open;
 window.XMLHttpRequest.prototype.open = function (method, URL) {
@@ -15,39 +16,38 @@ window.XMLHttpRequest.prototype.open = function (method, URL) {
                 //             EXAMPLE:             //
                 //////////////////////////////////////
                 var parsed = JSON.parse(_this.responseText);
-                
+                let userIds = [];
+                var parsedUsers = parsed.globalObjects.users;
                 // check if there are any unmatched users
-
-                if(users.unmatched.length){
-                    var parsedUsers = parsed.globalObjects.users;
-                    for (const [key, value] of Object.entries(parsedUsers)){
-                        if(users.unmatched.includes(value.screen_name)){
-                            console.log(value.screen_name)
-                            users.matched.names.push(value.screen_name);
-                            users.matched.ids.push(value.id_str);
-                            const index = users.unmatched.indexOf(value.screen_name);
-                            if (index > -1) {
-                                users.unmatched.splice(index, 1);
+                for(const [gname, group] of Object.entries(users)){
+                    if(group.unmatched.length){
+                        for (const [key, value] of Object.entries(parsedUsers)){
+                            if(group.unmatched.includes(value.screen_name)){
+                                console.log(value.screen_name)
+                                group.matched.names.push(value.screen_name);
+                                group.matched.ids.push(value.id_str);
+                                const index = group.unmatched.indexOf(value.screen_name);
+                                if (index > -1) {
+                                    group.unmatched.splice(index, 1);
+                                }
                             }
                         }
+                        // send new users object as a message to extension
+                        if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
+                            chrome.runtime.sendMessage(
+                            "dcchomblnephblhkmbclkhdpknehldbn",
+                            {"action": "cache-group", gname: group}
+                            );
+                        }
+                        
                     }
-                    // send new users object as a message to extension
-                    console.log(users);
-                    if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
-                        chrome.runtime.sendMessage(
-                        "dcchomblnephblhkmbclkhdpknehldbn",
-                        {"users": users}
-                        );
-                    }
-                    
+                    userIds = [...userIds, ...group.matched.ids]
                 }
-                let userIds = users.matched.ids;
+                console.log(userIds);
                 let tweets = parsed.globalObjects.tweets;
                 var filtered = new Set();
                 for (const [key, value] of Object.entries(tweets)) {
-                    console.log(value.user_id_str);
                     if (!userIds.includes(value.user_id_str)) {
-                        console.log(value.user_id_str);
                         filtered.add(key);
                     }
                 }

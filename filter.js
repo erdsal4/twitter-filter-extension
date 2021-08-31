@@ -1,18 +1,20 @@
 chrome.storage.sync.get(['users', 'selected'], async function (result) {
-  console.log("injected");
-  var display = {};
-  for(group of result.selected) {
-    display[groups] = result.users[group];
+  console.log(result.selected);
+  if(result.selected.length != 0){
+    var display = {};
+    for(group of result.selected) {
+      display[group] = result.users[group];
+    }
+    var s = document.createElement('script');
+    s.setAttribute("data", JSON.stringify(display));
+    s.src = chrome.runtime.getURL('script.js');
+    s.onload = function() {
+        this.remove();
+    };
+    (document.head || document.documentElement).appendChild(s);
+    console.log("injected");
   }
-  var s = document.createElement('script');
-  s.setAttribute("data", JSON.stringify(display));
-  s.src = chrome.runtime.getURL('script.js');
-  s.onload = function() {
-      this.remove();
-  };
-  (document.head || document.documentElement).appendChild(s);
-}
-);
+});
 
     /*
     

@@ -9,7 +9,7 @@ newuser.addEventListener("click", function () {
     ufield.setAttribute("type","text");
     ufield.setAttribute("class", "usern");
     ufield.setAttribute("placeholder","enter username");
-    ufield.setAttribute("style", "margin: 5px;");
+    ufield.setAttribute("style", "margin: 2px 5px;");
 
     var users=document.getElementById("group-users");
     users.appendChild(ufield);  
