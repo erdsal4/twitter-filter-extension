@@ -18,20 +18,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendResponse("okay");
     } else if(request.action === "save-selection"){
         setSelected(request.selected);
-    }
+    } 
+     else if(request.action === "delete-groups"){
+        deleteGroups(request.deleted);
+    } 
     
   }
 );
 
 chrome.runtime.onMessageExternal.addListener(
     function(request, sender, sendResponse) {
-    //   if(!validate(request.sender)) // Check the URL with a custom function
-    //     return;
-      if(request.users){
-        chrome.storage.sync.set({'users': request.users}, function (result) {
-            console.log(result.users);
+ 
+      if(request.action === 'cache-group'){
+        console.log("caching group");
+        chrome.storage.sync.get('users', function (result) {
+            let users = result.users;
+            users[request.gname] = request.group;
+            chrome.storage.sync.set({'users': users});
         });
       }
+      sendResponse();
     }
   );
 
@@ -85,9 +91,15 @@ function setSelected(selected) {
     chrome.storage.sync.set({'selected':selected});
 
 }
-
-function cleanUsers(){
+ function deleteGroups(deleted){
     
-    chrome.storage.sync.remove('users');
-    console.log("cleaned");
+      chrome.storage.sync.get('users', function (result) {
+        console.log("here");
+        let users = result.users;
+        for(group of deleted){
+            console.log(group);
+            delete users[group];
+        }
+        chrome.storage.sync.set({'users':users});
+    });
 }

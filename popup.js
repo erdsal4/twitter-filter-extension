@@ -63,8 +63,32 @@ save.addEventListener("click", async () => {
 
 });
 
+clean.addEventListener("click", async () => {
+  var groups = document.getElementsByClassName('a-group');
+  if(groups[0].disabled) return;
+  var deleted = [];
+  for (group of groups) {
+    if (group.checked) {
+      deleted.push(group.id);
+      let label = findLableForControl(group);
+      label.remove();
+      group.remove();
+
+    }
+  }
+  chrome.runtime.sendMessage({ "action": "delete-groups", "deleted": deleted });
+}); 
+
 newgroup.addEventListener("click", function () {
   window.location.href = "add_group.html";
 });
   // The body of this function will be executed as a content script inside the
   // current page
+function findLableForControl(el) {
+   var idVal = el.id;
+   labels = document.getElementsByTagName('label');
+   for( var i = 0; i < labels.length; i++ ) {
+      if (labels[i].htmlFor == idVal)
+           return labels[i];
+   }
+}

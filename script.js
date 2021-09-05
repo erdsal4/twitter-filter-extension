@@ -1,6 +1,6 @@
 let data = document.currentScript.getAttribute('data'); 
 var users = JSON.parse(data);
-console.log(users);
+console.log(JSON.parse(JSON.stringify(users)));
 
 var _open = XMLHttpRequest.prototype.open;
 window.XMLHttpRequest.prototype.open = function (method, URL) {
@@ -30,15 +30,18 @@ window.XMLHttpRequest.prototype.open = function (method, URL) {
                                 if (index > -1) {
                                     group.unmatched.splice(index, 1);
                                 }
+
+                                // send new users object as a message to extension
+                                if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
+                                    chrome.runtime.sendMessage(
+                                    "dcchomblnephblhkmbclkhdpknehldbn",
+                                    {"action": "cache-group", "gname": gname, "group": group}, {}
+                                    );
+                                }
+
                             }
                         }
-                        // send new users object as a message to extension
-                        if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
-                            chrome.runtime.sendMessage(
-                            "dcchomblnephblhkmbclkhdpknehldbn",
-                            {"action": "cache-group", gname: group}
-                            );
-                        }
+                        
                         
                     }
                     userIds = [...userIds, ...group.matched.ids]

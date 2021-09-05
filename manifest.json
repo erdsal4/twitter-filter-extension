@@ -17,7 +17,7 @@
     ],
     "content_scripts": [
       {
-        "matches": ["*://twitter.com/*"],
+        "matches": ["https://*.twitter.com/*"],
         "js": ["filter.js" ],
         "run_at": "document_start"
       }
