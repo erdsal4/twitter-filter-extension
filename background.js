@@ -93,13 +93,17 @@ function setSelected(selected) {
 }
  function deleteGroups(deleted){
     
-      chrome.storage.sync.get('users', function (result) {
-        console.log("here");
+      chrome.storage.sync.get(['users','groups'], function (result) {
         let users = result.users;
+        let groups = result.groups
         for(group of deleted){
             console.log(group);
             delete users[group];
+            const index = groups.indexOf(group);
+            if (index > -1) {
+                groups.splice(index, 1);
+            }
         }
-        chrome.storage.sync.set({'users':users});
+        chrome.storage.sync.set({'users':users, 'groups':groups});
     });
 }

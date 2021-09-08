@@ -51,6 +51,7 @@ window.XMLHttpRequest.prototype.open = function (method, URL) {
                 var filtered = new Set();
                 for (const [key, value] of Object.entries(tweets)) {
                     if (!userIds.includes(value.user_id_str)) {
+                        console.log(key);
                         filtered.add(key);
                     }
                 }

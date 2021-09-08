@@ -1,12 +1,3 @@
-
-// $(document).ready(function() {
-// 	$('.filter').click(function() {
-//     var uname = document.getElementById('uname').value;
-//     console.log(uname);
-// 		chrome.runtime.sendMessage({ "uname": uname })
-// 	})
-// });
-
 window.onload = function () {
 
   chrome.storage.sync.get(['groups', 'selected'], function (result) {
@@ -67,16 +58,19 @@ clean.addEventListener("click", async () => {
   var groups = document.getElementsByClassName('a-group');
   if(groups[0].disabled) return;
   var deleted = [];
+  var deleted_ids = []
   for (group of groups) {
     if (group.checked) {
-      deleted.push(group.id);
-      let label = findLableForControl(group);
-      label.remove();
-      group.remove();
-
+      deleted.push(group);
+      deleted_ids.push(group.id);
     }
   }
-  chrome.runtime.sendMessage({ "action": "delete-groups", "deleted": deleted });
+  for (elt of deleted){
+    let label = findLableForControl(elt);
+    label.remove();
+    elt.remove();
+  }
+  chrome.runtime.sendMessage({ "action": "delete-groups", "deleted": deleted_ids });
 }); 
 
 newgroup.addEventListener("click", function () {

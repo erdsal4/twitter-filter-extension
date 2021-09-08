@@ -1,8 +1,3 @@
-window.onload = function () {
-    console.log("hello");
-
-}
-
 newuser.addEventListener("click", function () {
     
     var ufield = document.createElement("input");
