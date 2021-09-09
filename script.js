@@ -48,28 +48,10 @@ window.XMLHttpRequest.prototype.open = function (method, URL) {
                 }
                 console.log(userIds);
                 let tweets = parsed.globalObjects.tweets;
-                var filtered = new Set();
+                // var filtered = new Set();
                 for (const [key, value] of Object.entries(tweets)) {
                     if (!userIds.includes(value.user_id_str)) {
-                        console.log(key);
-                        filtered.add(key);
-                    }
-                }
-                let entries = parsed.timeline.instructions[0].addEntries.entries;
-                loop1:
-                for (entry of entries) {
-                    if (entry.content.item) {
-                        if (filtered.has(entry.content.item.content.tweet.id)) {
-                            entry.content.item.content.tweet.displayType = "None";
-                        }
-                    } else if (entry.content.timelineModule) {
-                        loop2:
-                        for (item of entry.content.timelineModule.metadata.conversationMetadata.allTweetIds) {
-                            if (filtered.has(item)) {
-                                entry.content.timelineModule.displayType = "None"
-                                break loop2;
-                            }
-                        }
+                        delete tweets[key];
                     }
                 }
 
