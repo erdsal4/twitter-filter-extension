@@ -1,4 +1,4 @@
-chrome.storage.sync.get(['users', 'selected'], async function (result) {
+chrome.storage.sync.get(['users', 'selected'], function (result) {
   console.log(result.selected);
   if(result.selected.length != 0){
     var display = {};
