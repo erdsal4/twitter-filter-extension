@@ -1,63 +1,89 @@
-chrome.storage.sync.get(['users', 'selected'], function (result) {
-  console.log(result.selected);
-  if(result.selected.length != 0){
-    var display = {};
-    for(group of result.selected) {
-      display[group] = result.users[group];
-    }
-    var s = document.createElement('script');
-    s.setAttribute("data", JSON.stringify(display));
-    s.src = chrome.runtime.getURL('script.js');
-    s.onload = function() {
-        this.remove();
+// get the groups of people whose tweets will be displayed from script 
+// data attribute.
+
+let data = document.currentScript.getAttribute('data'); 
+var users = JSON.parse(data);
+
+// alter the xml prototype open function to catch relevant api requests
+// and edit response body 
+
+var _open = XMLHttpRequest.prototype.open;
+window.XMLHttpRequest.prototype.open = function (method, URL) {
+    var _onreadystatechange = this.onreadystatechange,
+        _this = this;
+
+    _this.onreadystatechange = function () {
+        // catch only completed 'api/2/timeline' requests
+        if (_this.readyState === 4 && _this.status === 200 && ~URL.indexOf('/api/2/timeline')) {
+            try {
+                
+
+                // parse the response text and store all users whose tweets are in response body
+                var parsed = JSON.parse(_this.responseText);
+                var parsedUsers = parsed.globalObjects.users;
+                // userIds for users whose tweets will be displayed.
+                let userIds = [];
+                // check if there are any users from the groups whose id's are not known
+                // in which case find their id's from parsedUsers
+                for(const [gname, group] of Object.entries(users)){
+                    // unmatched has the names of users whose id's are not known
+                    if(group.unmatched.length){
+                        for (const [key, value] of Object.entries(parsedUsers)){
+                            if(group.unmatched.includes(value.screen_name)){
+                                // if we can find the user, then add it to matched users
+                                group.matched.names.push(value.screen_name);
+                                group.matched.ids.push(value.id_str);
+                                // also remove it from unmatched
+                                const index = group.unmatched.indexOf(value.screen_name);
+                                if (index > -1) {
+                                    group.unmatched.splice(index, 1);
+                                }
+
+                                // send new users object with ids as a message to extension
+                                if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
+                                    chrome.runtime.sendMessage(
+                                    "dcchomblnephblhkmbclkhdpknehldbn",
+                                    {"action": "cache-group", "gname": gname, "group": group}, {}
+                                    );
+                                }
+
+                            }
+                        }
+                        
+                        
+                    }
+                    // add the matched ids to the userIds array
+                    userIds = [...userIds, ...group.matched.ids]
+                }
+
+                // delete tweets of users not in the filter group
+                let tweets = parsed.globalObjects.tweets;
+                for (const [key, value] of Object.entries(tweets)) {
+                    if (!userIds.includes(value.user_id_str)) {
+                        delete tweets[key];
+                    }
+                }
+
+                // rewrite responseText
+                Object.defineProperty(_this, 'responseText', { value: JSON.stringify(parsed) });
+                /////////////// END //////////////////
+            } catch (e) { }
+
+            // console.log('Caught! :)', method, URL/*,_this.responseText*/);
+        }
+        // call original callback
+        if (_onreadystatechange) _onreadystatechange.apply(this, arguments);
     };
-    (document.head || document.documentElement).appendChild(s);
-    console.log("injected");
-  }
-});
 
-    /*
-    
-    1- filter out any tweets except for one account
-      
+    // detect any onreadystatechange changing
+    Object.defineProperty(this, "onreadystatechange", {
+        get: function () {
+            return _onreadystatechange;
+        },
+        set: function (value) {
+            _onreadystatechange = value;
+        }
+    });
 
-      find the whole tweet element 
-      - get article element, then store the whole tweet element, which is its direct parent
-      
-      check if it is from the user you want to filter
-      - under an <a> element , there is <span> element
-      gives the username, check if that username matches yours, 
-      
-      if it does, hide the tweet element
-      if it does not, pass
-
-
-    2- create an input for account name
-
-      - user inputs name, when added, add to unmatched users
-      - next page load, find user str from 
-
-    3-  
-    
-    filter when twitter home page is opened, but contents not yet loaded
-      - have to have storage of previous settings
-
-    when twitter home page is opened, check if there exist users in storage
-      - if there is filter them
-    when user wants to add new uname while the twitter page is open
-    when twitter page loads new content
-
-    3- create 2 and more inputs
-
-    4- categorize accounts
-
-    - have categories in users now: users: {haber: {matched, unmatched} }
-    - need only to send the categories that are selected to script.js or
-    send all categories and only display the selected ones.
-
-    - input, have edit button that unlocks selection, 
-
-    5- automatically draw accounts and dropdown menu 
-
-    */
-  
+    return _open.apply(_this, arguments);
+};

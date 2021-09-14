@@ -1,10 +1,5 @@
 
-// don't quite understand how this works.. twitter probably uses pushState method when
-// uploading the page for first time, so this captures that event.
-
-chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
-   // chrome.scripting.executeScript({target: null, files:["filter.js"]});
-});
+// listener for messages from within the extension
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === "add"){
@@ -26,13 +21,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 );
 
+// listener from external sources-- i.e, the filter script that was injected to page
+
 chrome.runtime.onMessageExternal.addListener(
     function(request, sender, sendResponse) {
  
       if(request.action === 'cache-group'){
-        console.log("caching group");
         chrome.storage.sync.get('users', function (result) {
             let users = result.users;
+            // update the contents of group with cached ids
             users[request.gname] = request.group;
             chrome.storage.sync.set({'users': users});
         });
@@ -41,36 +38,15 @@ chrome.runtime.onMessageExternal.addListener(
     }
   );
 
-function addUser(uname){
-
-    chrome.storage.sync.get('users', function (result) {
-        // the input argument is ALWAYS an object containing the queried keys
-        // so we select the key we need
-        console.log(result);
-        let save = result.users;
-        if(!save){
-            console.log("empty");
-            save = {};
-            save['unmatched'] = []
-            save['matched'] = { 'names': [], 'ids': []};
-        }
-        console.log(save);
-        save.unmatched.push(uname);
-        console.log(save);
-        // set the new array value to the same key
-        chrome.storage.sync.set({'users': save});
-    });
-}
-
+// adds new group in storage
 function addNewGroup(gname, users){
-    console.log(gname);
     chrome.storage.sync.get({'users':{}, 'groups':[]}, function (result) {
-        // the input argument is ALWAYS an object containing the queried keys
-        // so we select the key we need
-        console.log(result);
+        
         let save = result.users;
         let groups = result.groups;
-        if(!save[gname]){
+        
+        // add group to main users object
+        if(!users[gname]){
             save[gname] = {};
             save[gname]['unmatched'] = []
             save[gname]['matched'] = { 'names': [], 'ids': []};
@@ -78,32 +54,41 @@ function addNewGroup(gname, users){
         for(uname of users){
             save[gname].unmatched.push(uname);
         }
-        console.log(save);
+
+        // add group to groups array
         groups.push(gname);
-        // set the new array value to the same key
+
         chrome.storage.sync.set({'users': save, 'groups': groups});
     });
 
 } 
 
+// sets selected groups
+
 function setSelected(selected) {
-
     chrome.storage.sync.set({'selected':selected});
-
 }
- function deleteGroups(deleted){
-    
+
+// deletes groups from storage
+
+function deleteGroups(deleted){
       chrome.storage.sync.get(['users','groups','selected'], function (result) {
+       
         let users = result.users;
         let groups = result.groups
         let selected = result.selected;
+        
         for(group of deleted){
-            console.log(group);
+            // delete group from main users object
             delete users[group];
+
+            // delete from groups array
             let index = groups.indexOf(group);
             if (index > -1) {
                 groups.splice(index, 1);
             }
+
+            // delete from selected array
             index = selected.indexOf(group);
             if (index > -1) {
                 selected.splice(index, 1);

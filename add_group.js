@@ -1,3 +1,5 @@
+// on clicking newuser, adds a new user name field on the page
+
 newuser.addEventListener("click", function () {
     
     var ufield = document.createElement("input");
@@ -10,6 +12,8 @@ newuser.addEventListener("click", function () {
     users.appendChild(ufield);  
   }); 
 
+// gets the new group name and its users and sends them to background to handle it
+
 save.addEventListener("click", function () {
 
     const gname = document.getElementById("gname").value;
@@ -18,7 +22,6 @@ save.addEventListener("click", function () {
 
     for(user of users){
         unames.push(user.value);
-        console.log(user.value);
     }
     chrome.runtime.sendMessage({"action": "newgroup", "gname": gname, "users": unames },
              function (response) {

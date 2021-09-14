@@ -4,9 +4,6 @@
     "version": "1.0",
     "manifest_version": 3,
     "permissions": [
-      "webNavigation",
-      "tabs", 
-      "scripting",
       "storage"
     ],
     "externally_connectable" : {
@@ -18,12 +15,12 @@
     "content_scripts": [
       {
         "matches": ["*://*.twitter.com/*"],
-        "js": ["filter.js" ],
+        "js": ["script.js" ],
         "run_at": "document_start"
       }
     ],
     "web_accessible_resources": [{
-      "resources": ["script.js"],
+      "resources": ["filter.js"],
       "matches": ["<all_urls>"]
     }],
     "background": {
@@ -45,8 +42,7 @@
         "32": "/images/icons8-filter-32.png",
         "48": "/images/icons8-filter-48.png",
         "96": "/images/icons8-filter-96.png"
-    },
-    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzy2bpB/RjPEivTkY2l8AA6BUXojyM7boGt8XMujIUHgPhbJzxiKChTzCeWM2QLXO+MtiM7f0oPoFsjEM061t/UuSIIsQ7PiXiEC9+AIEZDPEAQ8P90j3EQhrvOnardCHMsWFB5eIZwCh8HA4HeISS6zfgpdYCOOhFtMK6vin8DtJwKBwoVxcY6s2ga6Xf2XqO04u1V0tKXGTuYcEiM+hrI1q2XtBIIzqGOjxQP/FVLhmZWxW1/Pj7f2j3R1TD4lpqIrtQbf2Wm7EngxkXMtjmVkBeRuMGaVX/LPjdHl8zNBzJXRTyW8/7xGMtJg0DM9/xUFzekHuomREs/Vthl7kuwIDAQAB"
+    }
   }
   
   
