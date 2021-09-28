@@ -11,8 +11,14 @@ First of all, the user has to create "groups" of twitter accounts that the user 
 which allows users to create groups and manually add the Twitter account names belonging in those groups. For these actions, the following pages are used:
 
 * `popup.html`: the main interface of the extension. user can select which groups they want to view by checking the boxes of such groups and clicking 
-save to save this selection of groups.
+save to save this selection of groups. 
+
+![Alt text](/assets/doc/popupresized.png?raw=true "Popup screen from extension")
+
 * `add_group.html`: where user can create groups and add the accounts for those groups.
+
+![Alt text](/assets/doc/add_groupresized.png?raw=true "Add group screen from extension")
+
 * `background.js` : saves new groups and associated users in local Chrome storage, and also saves the selection of groups that are checked in the 
 popup.
 
